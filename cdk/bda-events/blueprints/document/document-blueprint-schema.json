@@ -1,0 +1,97 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "class": "Consumer Product Document",
+    "description": "A technical document that provides detailed information about a product, including specifications, features, and usage instructions.",
+    "properties": {
+        "product_name": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract the full name of the product as it appears in the manual."
+        },
+        "brand": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract the brand or manufacturer name of the product."
+        },
+        "model_number": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract the model number or product code."
+        },
+        "description": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and provide a comprehensive summary of the product, including its purpose and main features."
+        },
+        "features": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract a list of key product features and benefits."
+        },
+        "dimensions": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract the physical dimensions of the product (length, width, height)."
+        },
+        "weight": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract the weight of the product."
+        },
+        "power_requirements": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract the power requirements (voltage, wattage)."
+        },
+        "materials": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract information about materials used in the product."
+        },
+        "connectivity": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract information about connectivity options (WiFi, Bluetooth, etc.)."
+        },
+        "additional_specs": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract any additional specifications not covered by other fields."
+        },
+        "usage_instructions": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and provide a brief summary of how to use the product."
+        },
+        "warranty_info": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract a summary of warranty information."
+        },
+        "categories": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and identify product categories this item belongs to."
+        },
+        "keywords": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and suggest relevant search terms for the product."
+        },
+        "target_audience": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and identify the intended audience or users of the product."
+        },
+        "release_date": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract when the product was released or manufactured."
+        },
+        "comparison_table": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following consumer product document and extract any comparison tables between product models or features. Include the feature being compared, the value or specification for this product, and any additional notes or context."
+        }
+    }
+}

@@ -1,0 +1,108 @@
+{
+    "Entries": [
+        {
+            "Source": "custom.bedrock.blueprint.creation",
+            "DetailType": "Bedrock Document Blueprint Creation",
+            "Detail": {
+                "blueprint_name": "product_manual_blueprint", 
+                "blueprint_type": "DOCUMENT", 
+                "blueprint_stage": "LIVE", 
+                "operation": "CREATE", 
+                "document_class": "Product Manual", 
+                "document_description": "A technical document that provides detailed information about a product, including specifications, features, and usage instructions",
+                "schema_fields": [
+                    {
+                        "name": "product_name", 
+                        "description": "Please analyze the following product manual and extract the full name of the product as it appears in the manual.", 
+                        "alias": "Product Name"
+                    }, 
+                    {
+                        "name": "brand", 
+                        "description": "Please analyze the following product manual and extract the brand or manufacturer name of the product.", 
+                        "alias": "Brand"
+                    }, 
+                    {
+                        "name": "model_number", 
+                        "description": "Please analyze the following product manual and extract the model number or product code.", 
+                        "alias": "Model Number"
+                    },
+                    {
+                        "name": "description", 
+                        "description": "Please analyze the following product manual and provide a comprehensive summary of the product, including its purpose and main features.", 
+                        "alias": "Product Description"
+                    },
+                    {
+                        "name": "features", 
+                        "description": "Please analyze the following product manual and extract a list of key product features and benefits.", 
+                        "alias": "Features"
+                    },
+                    {
+                        "name": "dimensions", 
+                        "description": "Please analyze the following product manual and extract the physical dimensions of the product (length, width, height).", 
+                        "alias": "Dimensions"
+                    },
+                    {
+                        "name": "weight", 
+                        "description": "Please analyze the following product manual and extract the weight of the product.", 
+                        "alias": "Weight"
+                    },
+                    {
+                        "name": "power_requirements", 
+                        "description": "Please analyze the following product manual and extract the power requirements (voltage, wattage).", 
+                        "alias": "Power Requirements"
+                    },
+                    {
+                        "name": "materials", 
+                        "description": "Please analyze the following product manual and extract information about materials used in the product.", 
+                        "alias": "Materials"
+                    },
+                    {
+                        "name": "connectivity", 
+                        "description": "Please analyze the following product manual and extract information about connectivity options (WiFi, Bluetooth, etc.).", 
+                        "alias": "Connectivity"
+                    },
+                    {
+                        "name": "additional_specs", 
+                        "description": "Please analyze the following product manual and extract any additional specifications not covered by other fields.", 
+                        "alias": "Additional Specifications"
+                    },
+                    {
+                        "name": "usage_instructions", 
+                        "description": "Please analyze the following product manual and provide a brief summary of how to use the product.", 
+                        "alias": "Usage Instructions"
+                    },
+                    {
+                        "name": "warranty_info", 
+                        "description": "Please analyze the following product manual and extract a summary of warranty information.", 
+                        "alias": "Warranty Information"
+                    },
+                    {
+                        "name": "categories", 
+                        "description": "Please analyze the following product manual and identify product categories this item belongs to.", 
+                        "alias": "Categories"
+                    },
+                    {
+                        "name": "keywords", 
+                        "description": "Please analyze the following product manual and suggest relevant search terms for the product.", 
+                        "alias": "Keywords"
+                    },
+                    {
+                        "name": "target_audience", 
+                        "description": "Please analyze the following product manual and identify the intended audience or users of the product.", 
+                        "alias": "Target Audience"
+                    },
+                    {
+                        "name": "release_date", 
+                        "description": "Please analyze the following product manual and extract when the product was released or manufactured.", 
+                        "alias": "Release Date"
+                    },
+                    {
+                        "name": "comparison_table", 
+                        "description": "Please analyze the following product manual and extract any comparison tables between product models or features. Include the feature being compared, the value or specification for this product, and any additional notes or context.", 
+                        "alias": "Comparison Table"
+                    }
+                ]
+            }
+        }
+    ]
+}

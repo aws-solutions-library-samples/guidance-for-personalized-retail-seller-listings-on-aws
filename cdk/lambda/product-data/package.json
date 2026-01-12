@@ -1,0 +1,14 @@
+{
+  "name": "product-data-lambda",
+  "version": "1.0.0",
+  "description": "Lambda function for serving product data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1550.0"
+  }
+}

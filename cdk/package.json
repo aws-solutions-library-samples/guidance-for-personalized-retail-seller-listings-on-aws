@@ -1,0 +1,41 @@
+{
+  "name": "product-description-generator",
+  "version": "1.0.0",
+  "description": "AWS CDK infrastructure for Product Description Generator",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "synth": "cdk synth",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aws",
+    "cdk",
+    "serverless",
+    "product-description-generator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "aws-cdk": "^2.124.0",
+    "aws-cdk-lib": "^2.124.0",
+    "cdk-nag": "^2.35.73",
+    "constructs": "^10.3.0",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@aws-solutions-constructs/aws-eventbridge-lambda": "^2.84.0",
+    "@aws-solutions-constructs/aws-wafwebacl-apigateway": "^2.84.0",
+    "@aws-solutions-constructs/aws-wafwebacl-cloudfront": "^2.84.0",
+    "@aws-solutions-constructs/core": "^2.84.0",
+    "@cdklabs/generative-ai-cdk-constructs": "0.1.306",
+    "aws-sdk": "^2.1692.0"
+  }
+}

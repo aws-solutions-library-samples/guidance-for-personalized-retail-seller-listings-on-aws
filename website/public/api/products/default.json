@@ -1,0 +1,54 @@
+{
+  "name": "Ultra HD Smart Television X9000",
+  "brand": "TechVision",
+  "price": "$1,299.99",
+  "rating": 4.8,
+  "reviewCount": 256,
+  "description": "Experience stunning clarity and vibrant colors with the TechVision Ultra HD Smart Television X9000. This premium TV features advanced QLED technology, delivering exceptional picture quality with deep blacks and bright whites. The smart platform gives you access to all your favorite streaming services, while the sleek design complements any living space.",
+  "highlights": [
+    "65-inch QLED display with 4K Ultra HD resolution",
+    "Smart TV platform with voice control",
+    "120Hz refresh rate for smooth motion",
+    "Dolby Vision and Dolby Atmos support",
+    "Multiple HDMI and USB ports for connectivity"
+  ],
+  "specifications": {
+    "Display": "65-inch QLED, 4K Ultra HD (3840 x 2160)",
+    "HDR": "Dolby Vision, HDR10+, HLG",
+    "Refresh Rate": "120Hz",
+    "Audio": "40W, Dolby Atmos, DTS:X",
+    "Smart Features": "Voice Assistant, App Store, Screen Mirroring",
+    "Connectivity": "Wi-Fi 6, Bluetooth 5.0, HDMI 2.1 x 4, USB 3.0 x 3",
+    "Dimensions": "57.1\" x 32.9\" x 2.4\" (without stand)",
+    "Weight": "58.4 lbs (without stand)",
+    "Power": "Energy Star certified, 120V, 60Hz"
+  },
+  "features": [
+    {
+      "title": "Quantum Dot Technology",
+      "description": "Experience a billion colors with incredible brightness thanks to Quantum Dot technology that delivers 100% color volume.",
+      "icon": "✨"
+    },
+    {
+      "title": "AI-Powered Upscaling",
+      "description": "Our advanced AI processor automatically upscales content to near-4K quality, making even older content look amazing.",
+      "icon": "🧠"
+    },
+    {
+      "title": "Gaming Mode Pro",
+      "description": "Enjoy responsive gameplay with Auto Low Latency Mode (ALLM), Variable Refresh Rate (VRR), and FreeSync support.",
+      "icon": "🎮"
+    },
+    {
+      "title": "Smart Home Integration",
+      "description": "Control your smart home devices directly from your TV with built-in voice assistant and IoT hub functionality.",
+      "icon": "🏠"
+    }
+  ],
+  "images": [
+    "/images/product-main.jpg",
+    "/images/product-angle.jpg",
+    "/images/product-back.jpg",
+    "/images/product-remote.jpg"
+  ]
+}

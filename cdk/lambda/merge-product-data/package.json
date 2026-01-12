@@ -1,0 +1,22 @@
+{
+  "name": "merge-product-data",
+  "version": "1.0.0",
+  "description": "Lambda function to merge product data from multiple documents",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "bedrock",
+    "product",
+    "data",
+    "merge"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1450.0"
+  }
+}

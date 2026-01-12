@@ -1,0 +1,55 @@
+{
+  "name": "ProBook X15 Ultra",
+  "brand": "TechMaster",
+  "price": "$1,899.99",
+  "rating": 4.7,
+  "reviewCount": 183,
+  "description": "The TechMaster ProBook X15 Ultra is a premium laptop designed for professionals who demand performance and portability. Featuring the latest 12th generation processor, stunning 4K OLED display, and all-day battery life, this laptop delivers exceptional performance for even the most demanding tasks. The sleek aluminum chassis is both durable and lightweight, making it perfect for professionals on the go.",
+  "highlights": [
+    "12th Gen Intel Core i9 processor",
+    "15.6-inch 4K OLED touch display",
+    "32GB DDR5 RAM and 1TB NVMe SSD",
+    "NVIDIA RTX 4070 graphics",
+    "Up to 12 hours of battery life"
+  ],
+  "specifications": {
+    "Processor": "Intel Core i9-12900H (14 cores, up to 5.0 GHz)",
+    "Display": "15.6-inch 4K OLED touch display (3840 x 2160)",
+    "Memory": "32GB DDR5-4800 RAM (upgradable to 64GB)",
+    "Storage": "1TB PCIe Gen4 NVMe SSD (dual slots)",
+    "Graphics": "NVIDIA GeForce RTX 4070 with 8GB GDDR6",
+    "Battery": "96Wh lithium-polymer, up to 12 hours",
+    "Ports": "2x Thunderbolt 4, 2x USB-A 3.2, HDMI 2.1, SD card reader",
+    "Connectivity": "Wi-Fi 6E, Bluetooth 5.2",
+    "Dimensions": "13.7\" x 9.2\" x 0.7\"",
+    "Weight": "4.2 lbs (1.9 kg)"
+  },
+  "features": [
+    {
+      "title": "Professional Performance",
+      "description": "Tackle demanding workloads with ease thanks to the powerful 12th Gen Intel Core i9 processor and NVIDIA RTX graphics.",
+      "icon": "⚡"
+    },
+    {
+      "title": "Stunning Display",
+      "description": "Experience true-to-life colors and perfect blacks with the 4K OLED display that covers 100% of the DCI-P3 color gamut.",
+      "icon": "🎨"
+    },
+    {
+      "title": "All-Day Battery",
+      "description": "Stay productive all day with up to 12 hours of battery life and fast charging technology that provides 50% charge in just 30 minutes.",
+      "icon": "🔋"
+    },
+    {
+      "title": "Enhanced Security",
+      "description": "Protect your data with hardware-level security features including fingerprint reader, IR camera for facial recognition, and TPM 2.0.",
+      "icon": "🔒"
+    }
+  ],
+  "images": [
+    "/images/laptop-main.jpg",
+    "/images/laptop-open.jpg",
+    "/images/laptop-side.jpg",
+    "/images/laptop-ports.jpg"
+  ]
+}

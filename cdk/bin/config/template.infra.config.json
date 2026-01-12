@@ -1,0 +1,8 @@
+{
+    "stackPrefix": "PDG",
+    "env": {
+        "account": "AWS_ACCOUNT",
+        "region": "AWS_REGION"
+    },
+    "cdkNag": true
+}

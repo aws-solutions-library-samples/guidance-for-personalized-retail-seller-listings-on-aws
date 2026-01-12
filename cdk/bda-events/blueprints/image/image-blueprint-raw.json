@@ -1,0 +1,93 @@
+{
+    "Entries": [
+        {
+            "Source": "custom.bedrock.blueprint.creation",
+            "DetailType": "Bedrock Image Blueprint Creation",
+            "Detail": {
+                "blueprint_name": "product_image_blueprint", 
+                "blueprint_type": "IMAGE", 
+                "blueprint_stage": "LIVE", 
+                "operation": "CREATE", 
+                "document_class": "Product Image", 
+                "document_description": "A visual representation of a product that provides information about its appearance, design, and visual characteristics",
+                "schema_fields": [
+                    {
+                        "name": "visual_description", 
+                        "description": "Please analyze the following product image and provide a detailed description of what the product looks like, including shape, design, and overall appearance.", 
+                        "alias": "Visual Description"
+                    },
+                    {
+                        "name": "colors", 
+                        "description": "Please analyze the following product image and list all colors visible in the product.", 
+                        "alias": "Colors"
+                    },
+                    {
+                        "name": "primary_color", 
+                        "description": "Please analyze the following product image and identify the dominant color of the product.", 
+                        "alias": "Primary Color"
+                    },
+                    {
+                        "name": "materials", 
+                        "description": "Please analyze the following product image and identify visible materials the product appears to be made of (e.g., metal, plastic, wood, glass).", 
+                        "alias": "Materials"
+                    },
+                    {
+                        "name": "visible_features", 
+                        "description": "Please analyze the following product image and list visible product features and components.", 
+                        "alias": "Visible Features"
+                    },
+                    {
+                        "name": "visible_text", 
+                        "description": "Please analyze the following product image and extract any text visible on the product or packaging.", 
+                        "alias": "Visible Text"
+                    },
+                    {
+                        "name": "product_condition", 
+                        "description": "Please analyze the following product image and determine the apparent condition of the product (new, used, etc.).", 
+                        "alias": "Product Condition"
+                    },
+                    {
+                        "name": "environment", 
+                        "description": "Please analyze the following product image and describe the environment or setting in which the product is displayed.", 
+                        "alias": "Environment"
+                    },
+                    {
+                        "name": "size_impression", 
+                        "description": "Please analyze the following product image and provide an impression of the product's size (small, medium, large) based on context.", 
+                        "alias": "Size Impression"
+                    },
+                    {
+                        "name": "categories", 
+                        "description": "Please analyze the following product image and identify product categories this item appears to belong to.", 
+                        "alias": "Categories"
+                    },
+                    {
+                        "name": "keywords", 
+                        "description": "Please analyze the following product image and suggest relevant search terms for the product based on its visual appearance.", 
+                        "alias": "Keywords"
+                    },
+                    {
+                        "name": "style", 
+                        "description": "Please analyze the following product image and identify the style or design aesthetic of the product (modern, traditional, industrial, etc.).", 
+                        "alias": "Style"
+                    },
+                    {
+                        "name": "target_audience", 
+                        "description": "Please analyze the following product image and identify the apparent intended audience based on visual design (e.g., professionals, children, etc.).", 
+                        "alias": "Target Audience"
+                    },
+                    {
+                        "name": "logo_present", 
+                        "description": "Please analyze the following product image and determine whether a logo is visible on the product.", 
+                        "alias": "Logo Present"
+                    },
+                    {
+                        "name": "packaging_visible", 
+                        "description": "Please analyze the following product image and determine whether the product packaging is visible in the image.", 
+                        "alias": "Packaging Visible"
+                    }
+                ]
+            }
+        }
+    ]
+}

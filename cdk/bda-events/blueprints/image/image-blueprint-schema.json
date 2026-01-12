@@ -1,0 +1,82 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "class": "Product Image",
+    "description": "A visual representation of a product that provides information about its appearance, design, and visual characteristics.",
+    "properties": {
+        "visual_description": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and provide a detailed description of what the product looks like, including shape, design, and overall appearance."
+        },
+        "colors": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and list all colors visible in the product."
+        },
+        "primary_color": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and identify the dominant color of the product."
+        },
+        "materials": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and identify visible materials the product appears to be made of (e.g., metal, plastic, wood, glass)."
+        },
+        "visible_features": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and list visible product features and components."
+        },
+        "visible_text": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and extract any text visible on the product or packaging."
+        },
+        "product_condition": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and determine the apparent condition of the product (new, used, etc.)."
+        },
+        "environment": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and describe the environment or setting in which the product is displayed."
+        },
+        "size_impression": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and provide an impression of the product's size (small, medium, large) based on context."
+        },
+        "categories": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and identify product categories this item appears to belong to."
+        },
+        "keywords": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and suggest relevant search terms for the product based on its visual appearance."
+        },
+        "style": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and identify the style or design aesthetic of the product (modern, traditional, industrial, etc.)."
+        },
+        "target_audience": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and identify the apparent intended audience based on visual design (e.g., professionals, children, etc.)."
+        },
+        "logo_present": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and determine whether a logo is visible on the product."
+        },
+        "packaging_visible": {
+            "type": "string",
+            "inferenceType": "explicit",
+            "instruction": "Please analyze the following product image and determine whether the product packaging is visible in the image."
+        }
+    }
+}

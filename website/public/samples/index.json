@@ -1,0 +1,149 @@
+{
+  "sampleProducts": [
+    {
+      "id": "coffee-maker-deluxe",
+      "name": "BrewMaster Pro 5000 Coffee Maker",
+      "description": "Premium smart coffee maker with built-in grinder and Wi-Fi connectivity",
+      "category": "Kitchen Appliances",
+      "files": [
+        {
+          "name": "User Manual (PDF)",
+          "filename": "user-manual.pdf",
+          "type": "pdf",
+          "size": "~200KB",
+          "icon": "📄"
+        },
+        {
+          "name": "Product Image 1",
+          "filename": "product-image-01.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        },
+        {
+          "name": "Product Image 2",
+          "filename": "product-image-02.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        }
+      ]
+    },
+    {
+      "id": "fitness-watch-pro",
+      "name": "FitTrack Pro X1 Fitness Watch",
+      "description": "Advanced fitness tracker with heart rate monitoring and GPS",
+      "category": "Wearable Technology",
+      "files": [
+        {
+          "name": "User Manual (PDF)",
+          "filename": "user-manual.pdf",
+          "type": "pdf",
+          "size": "~200KB",
+          "icon": "📄"
+        },
+        {
+          "name": "Product Image 1",
+          "filename": "product-image-01.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        },
+        {
+          "name": "Product Image 2",
+          "filename": "product-image-02.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        }
+      ]
+    },
+    {
+      "id": "noise-cancelling-headphones",
+      "name": "SoundWave Elite Noise-Cancelling Headphones",
+      "description": "Premium wireless headphones with active noise cancellation",
+      "category": "Audio Equipment",
+      "files": [
+        {
+          "name": "User Manual (PDF)",
+          "filename": "user-manual.pdf",
+          "type": "pdf",
+          "size": "~200KB",
+          "icon": "📄"
+        },
+        {
+          "name": "Product Image 1",
+          "filename": "product-image-01.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        },
+        {
+          "name": "Product Image 2",
+          "filename": "product-image-02.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        }
+      ]
+    },
+    {
+      "id": "premium-blender",
+      "name": "BlendMaster Pro 2000 High-Performance Blender",
+      "description": "Professional-grade blender with variable speed control",
+      "category": "Kitchen Appliances",
+      "files": [
+        {
+          "name": "User Manual (PDF)",
+          "filename": "user-manual.pdf",
+          "type": "pdf",
+          "size": "~200KB",
+          "icon": "📄"
+        },
+        {
+          "name": "Product Image 1",
+          "filename": "product-image-01.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        },
+        {
+          "name": "Product Image 2",
+          "filename": "product-image-02.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        }
+      ]
+    },
+    {
+      "id": "robotic-vacuum",
+      "name": "CleanBot Pro X5 Robotic Vacuum",
+      "description": "Smart robotic vacuum with mapping and app control",
+      "category": "Home Automation",
+      "files": [
+        {
+          "name": "User Manual (PDF)",
+          "filename": "user-manual.pdf",
+          "type": "pdf",
+          "size": "~200KB",
+          "icon": "📄"
+        },
+        {
+          "name": "Product Image 1",
+          "filename": "product-image-01.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        },
+        {
+          "name": "Product Image 2",
+          "filename": "product-image-02.png",
+          "type": "image",
+          "size": "~50KB",
+          "icon": "🖼️"
+        }
+      ]
+    }
+  ]
+}
