@@ -1,4 +1,4 @@
-# Product Description Generator
+# Guidance for Personalized Retail Seller Listings on AWS
 
 A serverless application that generates product descriptions and search keywords based on uploaded product PDF manuals and/or images of the product. The system processes these inputs, extracts relevant information, and generates marketing content.
 
@@ -19,7 +19,7 @@ Please note, this project is licensed under the MIT License. See LICENSE file fo
 
 ## Overview
 
-The Product Description Generator is a serverless AWS application that helps e-commerce businesses and product marketers create compelling product descriptions and optimize product listings for search. By automating the extraction of information from technical documents and product images, and then generating marketing content, the system significantly reduces the time and expertise required to create effective product listings.
+The Guidance for Personalized Retail Seller Listings on AWS is a serverless AWS application that helps e-commerce businesses and product marketers create compelling product descriptions and optimize product listings for search. By automating the extraction of information from technical documents and product images, and then generating marketing content, the system significantly reduces the time and expertise required to create effective product listings.
 
 ### Key Features
 
@@ -74,7 +74,7 @@ The application follows a serverless, event-driven architecture with asynchronou
 
 ```bash
 git clone <remote_project_url>
-cd product-description-generator
+cd guidance-for-personalized-retail-seller-listings-on-aws
 ```
 
 ### Step 2: Install CDK Dependencies
@@ -410,7 +410,7 @@ interface JobStatus {
 
 ## Pricing Information
 
-Based on the [cost estimate](./docs/cost-estimate.md), the monthly cost for the Product Description Generator is approximately $98 with moderate usage. This estimate assumes:
+Based on the [cost estimate](./docs/cost-estimate.md), the monthly cost for the Guidance for Personalized Retail Seller Listings on AWS is approximately $98 with moderate usage. This estimate assumes:
 
 - 1,000 monthly active users
 - 500 products processed per month
