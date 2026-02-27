@@ -1,25 +1,54 @@
 # Guidance for Personalized Retail Seller Listings on AWS
 
-A serverless application that generates product descriptions and search keywords based on uploaded product PDF manuals and/or images of the product. The system processes these inputs, extracts relevant information, and generates marketing content.
-
 ## Table of Contents
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Deployment Guide](#deployment-guide)
-- [User Guide](#user-guide)
-- [Technical Documentation](#technical-documentation)
-- [Implementation Considerations](#implementation-considerations)
-- [Pricing Information](#pricing-information)
-- [Architecture Decision Records (ADRs)](#architecture-decision-records-adrs)
-- [Security and Compliance Considerations](#security-and-compliance-considerations)
-
-## License
-Please note, this project is licensed under the MIT License. See LICENSE file for additional details.
+1. [Overview](#overview)
+    - [Cost](#cost)
+2. [Prerequisites](#prerequisites)
+    - [Operating System](#operating-system)
+    - [AWS Account Requirements](#aws-account-requirements)
+    - [AWS CDK Bootstrap](#aws-cdk-bootstrap)
+3. [Automated Deployment](#automated-deployment)
+4. [Manual Deployment](#manual-deployment)
+5. [Deployment Validation](#deployment-validation)
+6. [Running the Guidance](#running-the-guidance)
+7. [Next Steps](#next-steps)
+8. [Cleanup](#cleanup)
+9. [Notices](#notices)
+10. [FAQ, Known Issues, Additional Considerations, and Limitations](#faq-known-issues-additional-considerations-and-limitations)
 
 ## Overview
 
-The Guidance for Personalized Retail Seller Listings on AWS is a serverless AWS application that helps e-commerce businesses and product marketers create compelling product descriptions and optimize product listings for search. By automating the extraction of information from technical documents and product images, and then generating marketing content, the system significantly reduces the time and expertise required to create effective product listings.
+The Guidance for Personalized Retail Seller Listings on AWS is a serverless application that helps e-commerce businesses and product marketers create compelling product descriptions and optimize product listings for search. By automating the extraction of information from technical documents and product images, and then generating marketing content, the system significantly reduces the time and expertise required to create effective product listings.
+
+This Guidance addresses the challenge of manually creating product descriptions from technical documentation. E-commerce sellers often receive product manuals and images but lack the time or expertise to transform this information into engaging marketing content. This Guidance automates that process using AI-powered document processing and content generation.
+
+### Architecture
+
+The application follows a serverless, event-driven architecture with asynchronous processing:
+
+![Architecture Diagram](./docs/architecture-personalized-retail-seller-listings.png)
+
+### Architecture Flow
+
+
+1. You authenticate through Amazon Cognito User Pool via Amazon CloudFront, then select PDF manuals and product images to upload through the web interface, with static assets in Amazon Simple Storage Service (Amazon S3)
+
+2. Amazon API Gateway routes your request to upload-handler AWS Lambda, which creates a job record in Amazon DynamoDB and returns pre-signed S3 URLs for direct file upload
+
+3. You upload files directly to S3 raw bucket. Amazon EventBridge captures ObjectCreated events and triggers queue-processor Lambda to verify uploads and send messages to Amazon Simple Queue Service (Amazon SQS)
+
+4. Extract-product-info Lambda (triggered by SQS) invokes Amazon Bedrock Data Automation to extract structured data from PDFs (specifications, features, instructions, warranty) and images (visual features, descriptions, brand information)
+
+5. Extraction results are saved to S3 processed bucket with metadata in DynamoDB. EventBridge receives ExtractionComplete event and triggers merge-product-data Lambda
+
+6. Merge-product-data Lambda retrieves extracted JSON files from S3 and job details from DynamoDB, then invokes Amazon Bedrock Large Language Model (LLM) to merge information, generate descriptions, create highlights, and generate search keywords
+
+7. Unified product data is saved to S3 merged bucket and DynamoDB products table with complete information and images
+
+8. You monitor job status (PENDING, PROCESSING, EXTRACTING, MERGING, COMPLETED, FAILED) through API Gateway polling DynamoDB, then view product lists and details retrieved from S3 and DynamoDB
+
+9. For each product image, API Gateway routes requests to product-image Lambda, which generates pre-signed S3 URLs for secure carousel display
 
 ### Key Features
 
@@ -30,93 +59,144 @@ The Guidance for Personalized Retail Seller Listings on AWS is a serverless AWS 
 - Update existing products with new information
 - Secure authentication and authorization
 
-## Architecture
+### Cost
 
-The application follows a serverless, event-driven architecture with asynchronous processing. It consists of several key components:
+You are responsible for the cost of the AWS services used while running this Guidance. As of February 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) Region is approximately $98 per month for processing 500 products with 1,000 monthly active users.
 
-![Architecture Diagram](./docs/seller-listing-architecture.drawio.png)
+We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance.
 
-### Key Components
+### Sample Cost Table
 
-1. From the Web Frontend, users are upload product PDF and image files to trigger the extraction process.
-2. **Amazon CloudFront** is used to distribute the React frontend web application.
-3. **Amazon Cognito** is used to authenticate users in the web application.
-4. **Amazon API Gatewa** is used to create and manage the REST API resources and methods, and communication with AWS Lambda proxies.
-5. **AWS Lambda** provides serverless compute resources and facilitates communication to and from other services.
-6. **Amazon Simple Queue Service** provides a queue for Lambda to pull extraction jobs from. This decouples processing from input and provided retry capability.
-7. **Amazon Simple Storage Service** stores the uploaded files and stores the extracted and merged product files.
-8. **Amazon EventBridge** manages published events and triggers event targets for decoupled event driven processes.
-9. **Amazon DynamoDB** stores extraction job metadata.
-10. **Amazon Bedrock Data Automation** extracts structured data from PDFs and images based on Blueprints. **Amazon Bedrock** is used to merge multiple extracted files into a single product description.
-11. **AWS X-Ray** and **Amazon CloudWatch** are used for tracing and monitoring.
-12. **AWS CloudFormation** is used for deploying resources as infrastructure as code (IaC).
+The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region for one month.
 
-### Data Flow
+| AWS Service | Dimensions | Cost [USD] |
+|-------------|------------|------------|
+| AWS Lambda | 500 products/month, 5 functions, 512MB memory, 30s avg execution | $75.00 |
+| Amazon S3 | 2.5GB storage, 1,500 PUT requests, 5,000 GET requests | $1.65 |
+| Amazon DynamoDB | 500 write requests, 5,000 read requests, 1GB storage | $2.50 |
+| Amazon Bedrock | 500 products, 10K input tokens + 5K output tokens per product | $15.00 |
+| Amazon API Gateway | 10,000 REST API calls per month | $3.50 |
+| Amazon CloudFront | 10GB data transfer, 10,000 requests | $0.10 |
+| Amazon EventBridge | 1,000 custom events | $0.10 |
+| Amazon SQS | 1,000 requests | $0.04 |
+| Amazon Cognito | 1,000 active users per month | $0.00 |
+| **Total Monthly Cost** | | **$97.89** |
 
-1. User uploads product documents and images through the web interface
-2. Files are stored in S3 and a processing job is created
-3. Lambda functions process the files using Bedrock Data Automation
-4. Extracted information is merged into a comprehensive product data sheet
-5. User can view the generated product information on the website
+## Prerequisites
 
-## Deployment Guide
+### Operating System
 
-### Prerequisites
+These deployment instructions are optimized to best work on Amazon Linux 2023. Deployment on another OS may require additional steps.
 
-- AWS CLI configured with appropriate permissions
-- Node.js 18+ and npm
-- AWS CDK installed globally (`npm install -g aws-cdk`)
+Required software:
+- **Node.js 18+** and npm
+- **AWS CLI** configured with appropriate credentials
+- **Git** for cloning the repository
+
+### AWS Account Requirements
+
+This deployment requires:
 - AWS account with permissions to create the required resources
 - [Enable foundation model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html) in your AWS account:
-  - Enable all Amazon and Anthropic models
+  - Enable all Amazon Titan models
+  - Enable all Anthropic Claude models
+
+### AWS CDK Bootstrap
+
+This Guidance uses AWS CDK. If you are using AWS CDK for the first time in your AWS account and Region, you need to bootstrap your environment:
+
+```bash
+npm install -g aws-cdk
+cdk bootstrap aws://ACCOUNT-NUMBER/REGION
+```
+
+Replace `ACCOUNT-NUMBER` with your AWS account ID and `REGION` with your target AWS Region (e.g., us-east-1).
+
+## Automated Deployment
+
+This section provides the quickest path to deploy the Guidance using an automated script.
+
+For automated deployment, a one-click deploy script (`deploy.sh`) is available in the `scripts/` directory. This script automates all deployment steps including dependency installation, resource creation, and validation.
+
+**Usage:**
+
+```bash
+# Clone the repository
+git clone https://github.com/aws-solutions-library-samples/guidance-for-personalized-retail-seller-listings-on-aws.git
+cd guidance-for-personalized-retail-seller-listings-on-aws
+
+# Make the script executable and run it
+chmod +x scripts/deploy.sh
+./scripts/deploy.sh
+```
+
+**What the script does:**
+- Installs all required dependencies automatically (Node.js 18+, AWS CDK)
+- Creates resources with dynamic naming to avoid conflicts
+- Deploys the complete infrastructure (all CDK stacks)
+- Creates Cognito user with generated credentials
+- Configures and deploys the website
+- Validates the deployment was successful
+- Provides detailed logging for troubleshooting
+
+**Environment:**
+- Designed for AWS CodeBuild environments running Amazon Linux 2023
+- Can also be run on Amazon Linux 2023 EC2 instances or local environments
+- Requires AWS CLI configured with appropriate credentials
+
+**Note:** For a detailed understanding of each deployment step, see the [Manual Deployment](#manual-deployment) section below.
+
+## Manual Deployment
+
+This section provides step-by-step instructions for manual deployment. Use this if you want to understand each step in detail or customize the deployment process.
 
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <remote_project_url>
+git clone https://github.com/aws-solutions-library-samples/guidance-for-personalized-retail-seller-listings-on-aws.git
 cd guidance-for-personalized-retail-seller-listings-on-aws
 ```
 
 ### Step 2: Install CDK Dependencies
 
 ```bash
-# Install CDK dependencies
 cd cdk
 npm install
+cd ..
 ```
 
 ### Step 3: Configure the Application
 
-1. Create a copy of the template configuration files:
+Create a copy of the template configuration file and edit it with your specific settings:
 
 ```bash
-# CDK configuration
-cd ..
 cp cdk/bin/config/template.infra.config.json cdk/bin/config/infra.config.json
 ```
 
-2. Edit the CDK infra configuration file with your specific settings:
+Edit `cdk/bin/config/infra.config.json`:
 
->*cdk/bin/config/infra.config.json:*
 ```json
 {
     "stackPrefix": "PDG",
     "env": {
         "account": "<YOUR_AWS_ACCOUNT>",
-        "region": "<YOUR_AWS_REGION"
+        "region": "<YOUR_AWS_REGION>"
     },
     "cdkNag": true
 }
 ```
 
+Replace `<YOUR_AWS_ACCOUNT>` with your AWS account ID and `<YOUR_AWS_REGION>` with your target Region (e.g., us-east-1).
+
 ### Step 4: Deploy the AWS Infrastructure
 
 ```bash
-# Bootstrap the AWS Region
 cd cdk
+
+# Bootstrap the AWS Region (if not already done)
 cdk bootstrap
 
-# Deploy the CDK Project
+# Deploy all CDK stacks
 cdk deploy --all
 ```
 
@@ -131,21 +211,41 @@ This will deploy all the stacks:
 - EventRulesStack (EventBridge rules)
 - ProductWebsiteStack (Website hosting)
 
-### Step 5: Configure Website Environment Variables
+### Step 5: Capture Deployment Outputs
 
-After deploying the infrastructure, you'll need to set up environment variables for the website.
-
-1. Create a copy of the template configuration files:
+After deployment completes, capture the following outputs from the CloudFormation console or using AWS CLI:
 
 ```bash
-# Website configuration
-cd ..
-cp website/src/config/template.runtime.config.json website/src/config/runtime.config.json
+# Get User Pool ID
+aws cloudformation describe-stacks \
+    --stack-name PDG-AuthStack \
+    --query "Stacks[0].Outputs[?OutputKey=='UserPoolId'].OutputValue" \
+    --output text
+
+# Get User Pool Client ID
+aws cloudformation describe-stacks \
+    --stack-name PDG-AuthStack \
+    --query "Stacks[0].Outputs[?OutputKey=='UserPoolClientId'].OutputValue" \
+    --output text
+
+# Get API Gateway URL
+aws cloudformation describe-stacks \
+    --stack-name PDG-ApiStack \
+    --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" \
+    --output text
 ```
 
-2. Edit the runtime configuration file with your specific settings:
+### Step 6: Configure Website Environment Variables
 
->*website/src/config/runtime.config.json:*
+Create a copy of the template configuration file and edit it with the outputs from Step 5:
+
+```bash
+cd ../website
+cp src/config/template.runtime.config.json src/config/runtime.config.json
+```
+
+Edit `website/src/config/runtime.config.json`:
+
 ```json
 {
   "userPoolId": "<USER_POOL_ID>",
@@ -154,7 +254,7 @@ cp website/src/config/template.runtime.config.json website/src/config/runtime.co
 }
 ```
 
-### Step 6: Create a Cognito User
+### Step 7: Create a Cognito User
 
 ```bash
 # Create a user in the Cognito User Pool
@@ -172,15 +272,15 @@ aws cognito-idp admin-set-user-password \
   --permanent
 ```
 
-### Step 7: Deploy the Website
+Replace `<USER_POOL_ID>` with the User Pool ID from Step 5, and `<your-email@example.com>` and `<YourStrongPassword123!>` with your desired credentials.
+
+### Step 8: Deploy the Website
 
 ```bash
-cd website
-
 # Install website dependencies
 npm install
 
-# Deploy the website
+# Build and deploy the website
 npm run deploy
 ```
 
@@ -190,18 +290,43 @@ The deploy script will:
 3. Create a CloudFront invalidation to update the cache
 4. Output the website URL
 
-### Step 8: Cleanup
+## Deployment Validation
 
-When you need to take down the deployment:
+To validate a successful deployment:
 
-```bash
-cd ../cdk
+1. Open the AWS CloudFormation console and verify that all stacks with names starting with `PDG-` show `CREATE_COMPLETE` status:
+   - PDG-StorageStack
+   - PDG-AuthStack
+   - PDG-QueueStack
+   - PDG-EventBusStack
+   - PDG-LambdaFunctionsStack
+   - PDG-ApiStack
+   - PDG-BedrockResourcesStack
+   - PDG-EventRulesStack
+   - PDG-ProductWebsiteStack
 
-# Destroy all deployed AWS resources
-cdk destroy --all
-```
+2. Verify the CloudFront distribution is active:
+   ```bash
+   aws cloudformation describe-stacks \
+       --stack-name PDG-ProductWebsiteStack \
+       --query "Stacks[0].Outputs[?OutputKey=='WebsiteUrl'].OutputValue" \
+       --output text
+   ```
 
-## User Guide
+3. Test the API Gateway endpoint:
+   ```bash
+   curl -I <API_GATEWAY_URL>/products
+   ```
+   You should receive a 401 or 403 response (authentication required), which confirms the API is accessible.
+
+4. Verify the Cognito User Pool has the admin user:
+   ```bash
+   aws cognito-idp admin-get-user \
+       --user-pool-id <USER_POOL_ID> \
+       --username admin
+   ```
+
+## Running the Guidance
 
 ### Accessing the Application
 
@@ -211,14 +336,16 @@ cdk destroy --all
 ### Uploading Product Files
 
 #### Synthetic Product Data
+
 Five synthetic products are included in this project in the `products` directory:
 - [Coffee Maker](./products/coffee-maker-deluxe/input/)
-- [Fitness Watch](./products//fitness-watch-pro/input/)
+- [Fitness Watch](./products/fitness-watch-pro/input/)
 - [Noise Cancelling Headphones](./products/noise-cancelling-headphones/input/)
 - [Premium Blender](./products/premium-blender/input/)
 - [Robot Vacuum](./products/robotic-vacuum/input/)
 
 #### Upload Instructions
+
 1. After signing in, you'll be directed to the Upload page
 2. Choose whether you're creating a new product or updating an existing one
    - For new products, the system will generate a product ID automatically
@@ -228,26 +355,28 @@ Five synthetic products are included in this project in the `products` directory
 4. Click "Upload Files" to start the upload process
 5. You'll be redirected to the Job Status page where you can monitor the processing progress
 
+### Expected Output
 
-### Viewing Job Status
+After uploading files, you should see:
 
-The Job Status page shows:
-- Current status of the processing job
-- Files being processed
-- Any errors that occurred
-- A link to view the product when processing is complete
+1. **Job Status Page**: Shows the current status of the processing job
+   - Status: PENDING → PROCESSING → EXTRACTING → MERGING → COMPLETED
+   - List of files being processed
+   - Any errors that occurred
+   - A link to view the product when processing is complete
+
+2. **Product Page**: Once processing is complete, the product page displays:
+   - Product images in a carousel
+   - Product name, brand, and description
+   - Key features and specifications
+   - Usage instructions and warranty information
+   - Categories and keywords
 
 ### Viewing Products
 
 1. Click on the "Products" tab in the navigation bar
 2. Browse the list of products
 3. Click on a product to view its details
-4. The product page displays:
-   - Product images in a carousel
-   - Product name, brand, and description
-   - Key features and specifications
-   - Usage instructions and warranty information
-   - Categories and keywords
 
 ### Updating Existing Products
 
@@ -257,290 +386,78 @@ The Job Status page shows:
 4. Upload new files (PDF manuals and/or images)
 5. The system will merge the new information with the existing product data
 
-## Technical Documentation
-
-### System Components
-
-#### AWS Services Used
-
-- **Amazon S3**: Stores raw uploaded files, processed data, and website assets
-- **Amazon DynamoDB**: Stores product metadata and job status
-- **AWS Lambda**: Handles file uploads, processing, and API requests
-- **Amazon API Gateway**: Provides REST endpoints for the web client
-- **Amazon Cognito**: Handles user authentication and authorization
-- **Amazon SQS**: Decouples upload from processing for asynchronous operation
-- **Amazon EventBridge**: Routes events between components
-- **Amazon Bedrock Data Automation**: Processes documents and images to extract information
-- **Amazon Bedrock Foundation Models**: Generates product descriptions and marketing content
-- **Amazon CloudFront**: Serves the website with low latency
-
-#### Lambda Functions
-
-- **upload-handler**: Creates upload jobs and generates pre-signed URLs
-- **queue-processor**: Processes messages from the SQS queue
-- **extract-product-info**: Extracts information from documents and images using Bedrock Data Automation
-- **merge-product-data**: Merges information from multiple documents into a single product data sheet
-- **product-data**: Serves product data to the web client
-- **product-image**: Serves product images to the web client
-
-#### Frontend Components
-
-- **App**: Main application component with authentication handling
-- **AuthContainer**: Authentication UI with login and forgot password forms
-- **UploadForm**: Form for uploading product files
-- **JobStatus**: Shows the status of processing jobs
-- **ProductList**: Lists all products
-- **ProductViewer**: Displays product details
-- **ImageCarousel**: Displays product images in a carousel
-
-### API Endpoints
-
-- **POST /uploads**: Create a new upload job
-  - Request: `{ files: string[], isNew: boolean, productId?: string }`
-  - Response: `{ jobId: string, productId: string, uploadUrls: Record<string, string>, status: string }`
-
-- **GET /uploads/{jobId}**: Get upload job status
-  - Response: `{ jobId: string, status: string, productId: string, ... }`
-
-- **GET /products**: Get all products
-  - Response: `Product[]`
-
-- **GET /products/{productId}**: Get product data
-  - Response: `Product`
-
-- **GET /products/{productId}/images/{imageId}**: Get product image
-  - Response: Image file S3 presigned URL
-
-### Data Models
-
-#### Product
-
-```typescript
-interface Product {
-  productId: string;
-  name: string;
-  brand?: string;
-  model_number?: string;
-  price?: string;
-  rating?: number;
-  reviewCount?: number;
-  description: string;
-  highlights?: string[];
-  specifications?: Record<string, string>;
-  features?: Array<string | { title?: string; description: string; icon?: string }>;
-  images?: Array<{
-    id: string;
-    filename: string;
-    path: string;
-    contentType: string;
-    description?: string;
-    uploadedAt: string;
-  }>;
-  usage_instructions?: string;
-  warranty_info?: string;
-  categories?: string[];
-  keywords?: string[];
-  target_audience?: string;
-  release_date?: string;
-  comparison_table?: Record<string, string>;
-}
-```
-
-#### Job Status
-
-```typescript
-interface JobStatus {
-  jobId: string;
-  createdAt: string;
-  updatedAt: string;
-  userId: string;
-  productId: string;
-  files: string[];
-  fileKeys: Record<string, string>;
-  status: 'PENDING' | 'PROCESSING' | 'EXTRACTING' | 'MERGING' | 'COMPLETED' | 'FAILED';
-  isNew: boolean;
-  processedFiles?: Array<{
-    fileName: string;
-    fileType: string;
-    filePath: string;
-    processingId: string;
-    structuredDataPath: string;
-  }>;
-  error?: string;
-}
-```
+## Next Steps
 
-## Implementation Considerations
+To customize this Guidance for your specific use case:
 
-### Scalability
+1. **Customize Bedrock Data Automation Blueprints**: Modify the extraction blueprints in the BedrockResourcesStack to extract specific product attributes relevant to your industry or product category.
 
-- **S3 Buckets**: Can handle virtually unlimited storage capacity
-- **Lambda Functions**: Auto-scale based on demand
-- **DynamoDB**: On-demand capacity mode for variable workloads
-- **SQS Queues**: Handle high throughput with visibility timeout and dead-letter queues
-- **API Gateway**: Throttling and usage plans to prevent abuse
-
-### Performance
+2. **Enhance Product Schema**: Extend the Product data model in `cdk/lambda/types/product.ts` to include additional fields specific to your business needs (e.g., SKU, inventory levels, supplier information).
 
-- **CloudFront**: Caches website assets for low-latency delivery
-- **API Gateway Caching**: Reduces load on backend services
-- **Presigned URLs**: Direct S3 access for file uploads and image loading
-- **Asynchronous Processing**: Prevents blocking user interactions during long-running tasks
+3. **Implement Advanced Search**: Add Amazon OpenSearch Service to enable full-text search and filtering capabilities across product descriptions and keywords.
 
-### Reliability
+4. **Add Multi-Language Support**: Integrate Amazon Translate to generate product descriptions in multiple languages for international marketplaces.
 
-- **SQS Dead-Letter Queues**: Capture failed messages for retry or analysis
-- **EventBridge Dead-Letter Queues**: Capture failed events
-- **Error Handling**: Comprehensive error handling in Lambda functions
-- **Status Tracking**: Job status tracking in DynamoDB
+5. **Implement Approval Workflow**: Add a review and approval step using AWS Step Functions before publishing generated content to ensure quality control.
 
-### Maintainability
+6. **Integrate with E-commerce Platforms**: Connect the system to your existing e-commerce platform (Shopify, Magento, etc.) using API integrations to automatically update product listings.
 
-- **CDK Infrastructure as Code**: Reproducible infrastructure deployment
-- **Modular Stack Architecture**: Separate stacks for different components
-- **Component-Based Frontend**: Reusable React components
-- **TypeScript**: Type safety for both frontend and infrastructure code
+7. **Add Analytics Dashboard**: Implement Amazon QuickSight to visualize product processing metrics, content quality scores, and system usage patterns.
 
-### Cost Optimization
+8. **Optimize Costs**: Implement S3 lifecycle policies to transition older files to S3 Glacier, and configure DynamoDB TTL to automatically delete old job records.
 
-- **Serverless Architecture**: Pay-per-use pricing model
-- **S3 Lifecycle Policies**: Transition older files to lower-cost storage tiers
-- **DynamoDB TTL**: Automatically delete old records
-- **Lambda Memory Optimization**: Balance cost and performance
+## Cleanup
 
-## Pricing Information
+To avoid ongoing charges, delete the resources created by this Guidance:
 
-Based on the [cost estimate](./docs/cost-estimate.md), the monthly cost for the Guidance for Personalized Retail Seller Listings on AWS is approximately $98 with moderate usage. This estimate assumes:
+1. Empty the S3 buckets before deletion:
+   ```bash
+   # List all buckets created by the Guidance
+   aws s3 ls | grep pdg
 
-- 1,000 monthly active users
-- 500 products processed per month
-- 5 MB average product upload size
-- 10K input tokens and 5K output tokens per product for Bedrock
+   # Empty each bucket (replace <bucket-name> with actual bucket names)
+   aws s3 rm s3://<bucket-name> --recursive
+   ```
 
-### Cost Breakdown
+2. Delete all CDK stacks:
+   ```bash
+   cd cdk
+   cdk destroy --all
+   ```
 
-| Service | Monthly Cost |
-|---------|-------------|
-| AWS Lambda | $75.00 |
-| Amazon S3 | $1.65 |
-| Amazon DynamoDB | $2.50 |
-| Amazon Bedrock | $15.00 |
-| Amazon API Gateway | $3.50 |
-| Amazon CloudFront | $0.10 |
-| Amazon EventBridge | $0.10 |
-| Amazon SQS | $0.04 |
-| **Total Monthly Cost** | **$97.89** |
+3. Confirm the deletion when prompted by typing `y`.
 
-### Cost Scaling
+4. Verify all resources are deleted by checking the CloudFormation console for any remaining stacks with names starting with `PDG-`.
 
-| Growth Pattern | Month 1 | Month 3 | Month 6 | Month 12 |
-|---------------|---------|---------|---------|----------|
-| Steady | $98/mo | $98/mo | $98/mo | $98/mo |
-| Moderate (5% monthly growth) | $98/mo | $108/mo | $125/mo | $168/mo |
-| Rapid (10% monthly growth) | $98/mo | $119/mo | $158/mo | $280/mo |
+**Note**: Some resources like CloudWatch Logs may be retained for a period after stack deletion. These will incur minimal costs and can be manually deleted from the CloudWatch console if desired.
 
-### Cost Optimization Recommendations
+## Notices
 
-1. Implement S3 lifecycle policies to transition older raw files to S3 Infrequent Access storage
-2. Configure DynamoDB Time-to-Live (TTL) for job tracking records
-3. Optimize Lambda memory settings to balance cost and performance
-4. Use Bedrock prompt caching to reduce token usage for common patterns
-5. Monitor CloudWatch metrics to identify and optimize underperforming Lambda functions
+Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided "as is" without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.
 
-## Architecture Decision Records (ADRs)
+## FAQ, Known Issues, Additional Considerations, and Limitations
 
-### ADR 1: Serverless Architecture
+### Known Issues
 
-**Context**: We needed to choose between a traditional server-based architecture and a serverless architecture.
+1. **Cold Start Latency**: Lambda functions may experience cold start delays (2-5 seconds) for the first request after a period of inactivity. This is normal behavior for serverless applications.
 
-**Decision**: We chose a serverless architecture using AWS Lambda, API Gateway, S3, and other managed services.
+2. **Large File Processing**: Files larger than 10MB may take longer to process. Consider implementing file size validation in the frontend to warn users about extended processing times.
 
-**Rationale**:
-- No servers to manage or maintain
-- Automatic scaling based on demand
-- Pay-per-use pricing model
-- Reduced operational overhead
-- Faster time to market
+3. **Concurrent Processing Limits**: The default Lambda concurrency limit may throttle requests during high-volume uploads. Monitor CloudWatch metrics and request limit increases if needed.
 
-**Consequences**:
-- Limited execution time for Lambda functions (15 minutes max)
-- Cold start latency for infrequently used functions
-- Debugging and monitoring can be more complex
+### Additional Considerations
 
-### ADR 2: Bedrock Data Automation for Document Processing
+- **Demo vs Production**: This Guidance is designed as a demonstration. For production use, consider adding:
+  - Web Application Firewall (WAF) in front of CloudFront and API Gateway
+  - Multi-factor authentication (MFA) for Cognito users
+  - Customer-managed IAM roles with least privilege policies instead of AWS managed roles
+  - Enhanced monitoring and alerting with CloudWatch Alarms
+  - Backup and disaster recovery procedures
 
-**Context**: We needed a solution for extracting information from PDF documents and images.
+- **Data Privacy**: Uploaded product documents and images are stored in S3. Ensure compliance with your organization's data retention and privacy policies.
 
-**Decision**: We chose Amazon Bedrock Data Automation (BDA) for document and image processing.
+- **Bedrock Model Access**: This Guidance requires access to Amazon Bedrock foundation models. Model availability and pricing vary by Region. Verify model access in your target Region before deployment.
 
-**Rationale**:
-- Unified processing engine for both documents and images
-- Advanced AI capabilities for information extraction
-- Integration with AWS services
-- Customizable blueprints for specific extraction needs
-- Managed service with no infrastructure to maintain
+- **Cost Scaling**: Costs scale with usage. Monitor your AWS Cost Explorer dashboard regularly, especially during initial testing with large product catalogs.
 
-**Consequences**:
-- Cost based on document processing volume
-- Need for custom blueprints for optimal extraction
-
-### ADR 3: Event-Driven Architecture
-
-**Context**: We needed a way to handle asynchronous processing and communication between components.
-
-**Decision**: We chose an event-driven architecture using EventBridge and SQS.
-
-**Rationale**:
-- Loose coupling between components
-- Better scalability and resilience
-- Simplified error handling and retry logic
-- Support for complex workflows
-- Improved monitoring and observability
-
-**Consequences**:
-- More complex system design
-- Need for careful event schema design
-- Potential for event duplication or loss
-
-## Security and Compliance Considerations
-
-### Path to Production Security Recommendations
-
-- AWS Managed Roles (e.g. AWSLambdaBasicExecutionRole) are used and should be replaced by a customer managed role with least privilege policies.
-- Multi Factor Authentication (MFA) is not enabled for the Cognito User Pool. Enable this to add another layer of security.
-- Consider adding a Web Application Firewall (WAF) in front of both the CloudFront distribution and the API Gateway to protect these public facing endpoints.
-
-### Authentication and Authorization
-
-- **Cognito User Pools**: Secure user authentication and management
-- **Cognito Identity Pools**: Federated identity for AWS resource access
-- **API Gateway Authorizers**: Secure API endpoints with Cognito authentication
-- **IAM Roles**: Least privilege access for AWS resources.
-
-### Data Protection
-
-- **S3 Server-Side Encryption**: All data encrypted at rest
-- **HTTPS**: All data encrypted in transit
-- **Input Validation**: Prevent injection attacks
-
-### Compliance
-
-- **GDPR Considerations**:
-  - User data minimization
-  - Secure data storage and processing
-  - Data deletion capabilities
-  - Transparency in data usage
-
-### Security Best Practices
-
-- **CDK Nag**: Enforces security best practices in infrastructure code
-- **CloudWatch Logs**: Monitors for suspicious activity
-- **CloudTrail**: Tracks API usage and changes
-
-### Industry-Specific Considerations
-
-For e-commerce and retail industries:
-- Protection of proprietary product information
-- Secure handling of marketing content
-- Compliance with advertising standards
-- Protection of intellectual property
+For any feedback, questions, or suggestions, please use the issues tab in the GitHub repository.
