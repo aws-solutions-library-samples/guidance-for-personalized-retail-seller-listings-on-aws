@@ -23,7 +23,7 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "aws-cdk": "^2.124.0",
-    "aws-cdk-lib": "^2.124.0",
+    "aws-cdk-lib": "^2.262.1",
     "cdk-nag": "^2.35.73",
     "constructs": "^10.3.0",
     "source-map-support": "^0.5.21",
